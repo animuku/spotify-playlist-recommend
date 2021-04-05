@@ -1,25 +1,37 @@
-import logo from './logo.svg';
 import './App.css';
+import React from "react";
+import {BrowserRouter,Switch,Route} from "react-router-dom";
+import Home from "./components/Home";
+import Redirect from "./components/Redirect";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component{
+  constructor(props){
+    super(props);
+    this.state={
+      accessToken:"",
+      expiryTime: '0'
+    };
+  }
+
+
+  setAccessToken = (accessToken)=>{
+    this.setState({
+      accessToken:accessToken
+    });
+  }
+  
+  render(){
+    return (
+      <BrowserRouter>
+        <div className="App">
+          <Switch>
+            <Route path="/" component={Home} exact={true}/>
+            <Route path = "/redirect/" render={(props)=><Redirect{...props} setAccessToken={this.setAccessToken}/>}/>
+          </Switch>
+        </div>
+      </BrowserRouter>
+    );
+  }
 }
 
 export default App;
