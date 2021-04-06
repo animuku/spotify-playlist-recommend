@@ -33,7 +33,7 @@ export const initiateGetResult = async(searchTerm) => {
         searchTerm
       )}&type=artist`;
       const result = await get(API_URL);
-      console.log(result);
+      // console.log(result);
       return result;
     }
     catch (error) {

@@ -1,55 +1,38 @@
 import React from "react";
 import queryString from "query-string";
 import SearchBar from "./SearchBar";
-import {initiateGetResult} from "../utils/function";
 
 class Redirect extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            searchResult:[]
+            selectedArtist:null
         };
     }
 
     componentDidMount(){
-        // console.log(this.props);
         const accessToken = queryString.parse(this.props.location.hash);
         const expiryTime = new Date().getTime() + accessToken.expires_in*1000;
         localStorage.setItem('params',JSON.stringify(accessToken));
         localStorage.setItem('expiry_time',expiryTime);
-        this.setState({
-            accessToken:accessToken
-        });
         this.props.setAccessToken(accessToken);
     }
 
-    handleChange=(event)=>{
+    handleSearch = (selectedArtist)=>{
         this.setState({
-            queryString:event.target.value
+            // weird fix for returned object
+            selectedArtist:JSON.parse(JSON.stringify(selectedArtist))
         });
-    }
+    };
 
-    handleSearch = async(artist)=>{
-        if(artist && artist.length){
-            const result = await initiateGetResult(artist);
-            this.setState({
-                searchResult:result.artists.items
-            });
-        }
-    }
 
 
     render(){
         return (
             <div>
+                <h3>Select an artist</h3>
                 <SearchBar handleSearch={this.handleSearch} />
-                <ul>
-                    {this.state.searchResult.map((artist)=>(
-                        <div id={artist.id}>
-                            <li>{artist.name}</li>
-                        </div>
-                    ))}
-                </ul>
+                {this.state.selectedArtist?<div>{this.state.selectedArtist.label}</div>:null}
             </div>
         )
     }
